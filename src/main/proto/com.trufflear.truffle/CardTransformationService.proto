@@ -1,0 +1,71 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.trufflear.truffle";
+option java_outer_classname = "CardTransformationProto";
+
+service CardTransformation {
+  rpc GetCardTransformationData(GetCardTransformationDataRequest) returns (GetCardTransformationDataResponse);
+}
+
+message GetCardTransformationDataRequest {
+  string platform = 1;
+}
+
+message GetCardTransformationDataResponse {
+  repeated AugmentedTransformation augmented_transformations = 1;
+}
+
+message AugmentedTransformation {
+  repeated AugmentedImage augmented_images = 2;
+  AugmentedVideo augmented_video = 3;
+  AttachmentView attachment_view = 4;
+  AnimationEffect animation_effect = 5;
+}
+
+message AttachmentView {
+  repeated LinkButton link_buttons = 1;
+  Size attachment_ui_view_size = 2;
+  float attachment_width_scale_to_image_width = 3;
+  float min_scale = 4;
+  float max_scale = 5;
+  Position position = 6;
+}
+
+message AnimationEffect {
+  string lottie_url = 1;
+  Size effect_view_size = 2;
+  float min_scale = 3;
+  float max_scale = 4;
+  Position position = 5;
+}
+
+message LinkButton {
+  string image_url = 1;
+  string text = 2;
+  string color_code = 3;
+}
+
+message AugmentedImage {
+  string image_url = 1;
+  string image_name = 2;
+  Size physical_image_size = 3;
+}
+
+message AugmentedVideo {
+  string video_url = 1;
+  int32 video_dimension_width_px = 2;
+  int32 video_dimension_height_px = 3;
+  float video_width_scale_to_image_width = 4;
+  Position position = 5;
+}
+
+message Size {
+  float width = 1;
+  float height = 2;
+}
+
+message Position {
+  float xScaleToImageWidth = 1;
+  float y = 2;
+  float zScaleToImageHeight = 3;
+}

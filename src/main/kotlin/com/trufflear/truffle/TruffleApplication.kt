@@ -1,13 +1,19 @@
 package com.trufflear.truffle
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import javax.sql.DataSource
 
 
-class TruffleApplication(private val port: Int) {
+class TruffleApplication(
+    private val port: Int,
+    dataSource: DataSource
+) {
     val server: Server = ServerBuilder
             .forPort(port)
-            .addService(HelloService())
+            .addService(CardTransformationService(dataSource))
             .build()
 
     fun start() {
@@ -32,9 +38,21 @@ class TruffleApplication(private val port: Int) {
 
 }
 
+private fun getHikariDataSource() =
+    HikariDataSource(
+        HikariConfig().apply {
+            jdbcUrl = "jdbc:mysql://database-1.cluster-cygt5mfbjjmh.us-west-1.rds.amazonaws.com:3306/TruffleDatabase"
+            username = "admin"
+            password = "KingOysterBoo123"
+            driverClassName = "com.mysql.cj.jdbc.Driver"
+        }
+    )
+
 fun main() {
+
+    val datasource = getHikariDataSource()
     val port = System.getenv("PORT")?.toInt() ?: 50051
-    val server = TruffleApplication(port)
+    val server = TruffleApplication(port, datasource)
     server.start()
     server.blockUntilShutdown()
 }
