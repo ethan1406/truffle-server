@@ -41,9 +41,9 @@ class TruffleApplication(
 private fun getHikariDataSource() =
     HikariDataSource(
         HikariConfig().apply {
-            jdbcUrl = "jdbc:mysql://database-1.cluster-cygt5mfbjjmh.us-west-1.rds.amazonaws.com:3306/TruffleDatabase"
-            username = "admin"
-            password = "KingOysterBoo123"
+            jdbcUrl = System.getenv("DB_URL")
+            username = System.getenv("DB_USER")
+            password = System.getenv("DB_PASSWORD")
             driverClassName = "com.mysql.cj.jdbc.Driver"
         }
     )
